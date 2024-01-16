@@ -44,9 +44,12 @@ jobs:
       # 存档打包的文件，以便后续上传，TODO: 看起来有点笨，有没有更好的方法？
       - name: Init APP Version Name
         run: |
-          echo "ver_name=$(grep -m 1 '\"versionName\":' output-metadata.json | grep -oP '\"versionName\": \"\K[^\"]+')" >> $GITHUB_ENV
-          echo "ver_code=$(grep -m 1 '\"versionCode\":' output-metadata.json | grep -oP '\"versionCode\": \K\d+' | tail -c 3)" >> $GITHUB_ENV
-          echo "ver_date=$(grep -m 1 '\"outputFile\":' output-metadata.json | grep -oP '\"outputFile\": \"[^\"]+' | grep -oP '\d{8}')" >> $GITHUB_ENV
+          echo "ver_name=$(grep -m 1 '\"versionName\":' build/app/outputs/apk/release/output-metadata.json | grep -oP '\"versionName\": \"\K[^\"]+')" >> $GITHUB_ENV
+          echo "ver_code=$(grep -m 1 '\"versionCode\":' build/app/outputs/apk/release/output-metadata.json | grep -oP '\"versionCode\": \K\d+' | tail -c 3)" >> $GITHUB_ENV
+          echo "ver_date=$(grep -m 1 '\"outputFile\":' build/app/outputs/apk/release/output-metadata.json | grep -oP '\"outputFile\": \"[^\"]+' | grep -oP '\d{8}')" >> $GITHUB_ENV
+          echo "ver_name=${{ env.ver_name }}"
+          echo "ver_code=${{ env.ver_code }}"
+          echo "ver_date=${{ env.ver_date }}"
       - name: Upload App To Artifact universal
         if: success () || failure ()
         uses: actions/upload-artifact@v3
